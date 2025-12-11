@@ -1,0 +1,56 @@
+version: '3'
+services:
+  # Node 1
+  postgres-node1:
+    image: postgres:latest
+    container_name: postgres_node1
+    environment:
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: password1
+      POSTGRES_DB: shard1
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./node1_data:/var/lib/postgresql/data
+      - ./init_node1.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Node 2
+  postgres-node2:
+    image: postgres:latest
+    container_name: postgres_node2
+    environment:
+      POSTGRES_USER: user2
+      POSTGRES_PASSWORD: password2
+      POSTGRES_DB: shard2
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./node2_data:/var/lib/postgresql/data
+      - ./init_node2.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Node 3
+  postgres-node3:
+    image: postgres:latest
+    container_name: postgres_node3
+    environment:
+      POSTGRES_USER: user3
+      POSTGRES_PASSWORD: password3
+      POSTGRES_DB: shard3
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./node3_data:/var/lib/postgresql/data
+      - ./init_node3.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # pgAdmin for DB management
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "6050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
